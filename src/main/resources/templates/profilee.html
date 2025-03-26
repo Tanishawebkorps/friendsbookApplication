@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Profile Page</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/friendsbook/css/profile.css" />
+  </head>
+
+  <body>
+    <div class="logo">
+      <p class="friend">Friends<span class="book">Book</span></p>
+    </div>
+
+    <div class="container">
+      <div class="squere">
+        <div class="box1">
+          <div class="column2">
+            <div id="part2">
+              <div class="profile-container">
+                <h2>Upload Profile</h2>
+
+                <!-- Profile Image Section -->
+
+                <div class="profile-image-container">
+                  <!-- Display the current profile image -->
+
+                  <img
+                    id="profile-image"
+                    class="profile-image"
+                    th:src="@{${profileImageUrl}}"
+                  />
+
+                  <!-- Camera Icon for Upload -->
+
+                  <label for="image-upload" class="camera-icon1">📷</label>
+                </div>
+
+                <!-- Hidden file input field -->
+
+                <input type="file" id="image-upload" accept="image/*" />
+
+                <!-- Button to trigger the upload action -->
+
+                <button class="btn-upload" onclick="uploadImage()">
+                  Upload
+                </button>
+              </div>
+            </div>
+
+            <div id="part3">
+                
+              <div>
+                <span id="followersCount" onclick="toggleFollowers()">0</span
+                ><br />
+
+                <button id="followButton">Followers</button>
+
+                <ul id="followersList"></ul>
+
+                <!-- Display followers here -->
+
+                <div id="followers-error-message" style="display: none">
+                  Failed to load followers.
+                </div>
+              </div>
+
+              <div>
+                <span id="followingsCount" onclick="toggleFollowings()">0</span
+                ><br />
+
+                <button id="followingButton">Followings</button>
+
+                <ul id="followingsList"></ul>
+
+                <!-- This will display the list of followings -->
+
+                <div
+                  id="following-error-message"
+                  style="display: none; color: red"
+                >
+                  Failed to load followings.
+                </div>
+              </div>
+
+              <div>
+                <span id="postsCount">0</span><br/>
+
+                <button id="load-post">Posts</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="box2">
+          <div id="part1">
+            <div class="box_inner_2">
+               <div class="bio-dynamic visible">
+               <p th:text="${user.userId}"></p>
+    
+               <p th:text="${user.userEmail}"></p>
+    
+               <p th:text="${user.userBio}"></p>
+               </div>
+              <button onclick="toggleDiv()">update Bio</button>
+
+              <div class="bio-container hidden">
+                <h3>Edit Your Bio</h3>
+
+                <form id="bio-form" class="bio-form">
+                  <!-- <input type="hidden" id="userEmail" th:value="${user.userEmail}">-->
+
+                  <label for="bio">Update Bio:</label>
+
+                  <textarea
+                    id="bio-input"
+                    class="bio-input"
+                    rows="4"
+                    placeholder="Write something about yourself..."
+                  ></textarea>
+
+                  <button
+                    type="button"
+                    class="save-bio-btn"
+                    onclick="updateBio()"
+                  >
+                    Save Bio
+                  </button>
+                </form>
+
+                <div id="message" class="message"></div>
+              </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="box3">
+            
+          <div class="part5">
+            <button id="homeButton">home</button>
+            <button id="addbtn"
+            onclick="togglePostDiv()">Add Posts</button>
+
+            <div class="upload-post-container hidden">
+              <h2>Upload Post</h2>
+
+              <form
+                id="postForm"
+                class="post-form"
+                enctype="multipart/form-data"
+              >
+                <!-- Custom file input with camera icon -->
+
+                <div class="form-group file-upload-wrapper">
+                  <label for="file">
+                    <span class="camera-icon">&#128247;</span>
+
+                    <!-- Camera Icon -->
+                    <input
+                      type="file"
+                      id="file"
+                      name="file"
+                      accept="image/*"
+                      required
+                    />
+                  </label>
+                </div>
+
+                <!-- Caption input field -->
+
+                <div class="form-group" style="margin-left: 40px">
+                  <label for="caption">Caption (optional):</label>
+                  <input
+                    type="text"
+                    id="caption"
+                    name="caption"
+                    placeholder="Add a caption to your post..."
+                  />
+                </div>
+
+                <!-- Upload button -->
+
+                <button type="submit" class="upload-btn">Upload</button>
+              </form>
+
+              <div id="message" class="message"></div>
+            </div>
+          </div>
+
+          
+        </div>
+
+        
+
+        
+
+        <div>
+          <div id="followingpostsContainer"></div>
+          
+        </div>
+        <div id="posts-container">
+            <!-- Posts will be dynamically added here -->
+        </div>
+        <div id="posts-drum">
+          <div th:each="post : ${followingposts}">
+            <img
+              th:src="@{'/post/' + ${post.postId}}"
+              style="max-width: 300px"
+            />
+
+            <p th:text="${post.caption}"></p>
+          </div>
+          <button id="load-posts-btn">Load Past Posts</button>
+        </div>
+        <button id="logout">Logout</button>
+      </div>
+    </div>
+
+    <script>
+      var userEmail = "[[${user.userEmail}]]";
+
+      var userId = "[[${user.userId}]]";
+
+      localStorage.setItem("userId", userId);
+
+      localStorage.setItem("userEmail", userEmail);
+    </script>
+
+    <script src="/friendsbook/js/profilee.js"></script>
+  </body>
+</html>

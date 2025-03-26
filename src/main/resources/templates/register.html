@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register</title>
+
+    <link rel="stylesheet" href="/friendsbook/css/register.css">
+
+</head>
+
+<body>
+
+    <div class="logo">
+        <p class="friend">Friends<span class="book">Book</span></p>  
+    </div>
+
+    <div class="container">
+
+        <h2>Register</h2>
+
+        <form th:action="@{/reguser}" method="POST" th:object="${captcha}">
+
+            <!-- Username Input -->
+
+            <label for="userName"><b>Username</b></label>
+
+            <input type="text" placeholder="Enter Username" name="userName" required>
+
+            <br>
+
+
+
+            <!-- User Email Input -->
+
+            <label for="userEmail"><b>User Email</b></label>
+
+            <input type="email" placeholder="Enter User Email" name="userEmail" required>
+
+            <br>
+
+
+
+            <!-- Password Input -->
+
+            <label for="password"><b>Password</b></label>
+
+            <input type="password" placeholder="Enter Password" name="password" required>
+
+            <br>
+
+
+
+            <!-- CAPTCHA Image -->
+
+            <label for="image">CAPTCHA</label>
+
+            <img id="image" th:src="'data:image/jpeg;base64,' + *{realCaptcha}" alt="Captcha Image"/>
+
+            <br>
+
+
+
+            <!-- Hidden field for CAPTCHA Answer -->
+
+            <input type="hidden" th:field="*{hiddenCaptcha}" />
+
+
+
+            <!-- CAPTCHA Input -->
+
+            <label for="captchatext">Enter CAPTCHA Text</label>
+
+            <input type="text" id="captchatext" th:field="*{captcha}" required />
+
+            <br>
+
+
+
+            <!-- Error Message for CAPTCHA -->
+
+            <div th:if="${message != null}">
+
+                <span style="color:red;" th:text="${message}"></span>
+
+            </div>
+
+
+
+            <!-- Submit Button -->
+
+            <button type="submit">Register</button>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>
+
+

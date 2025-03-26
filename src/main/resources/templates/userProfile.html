@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Profile Page</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/friendsbook/css/profile.css" />
+  </head>
+
+  <body>
+    <div class="logo">
+      <p class="friend">Friends<span class="book">Book</span></p>
+    </div>
+
+    <div class="container">
+      <div class="squere">
+        <div class="box1">
+          <div class="column2">
+            <div id="part2">
+              <div class="profile-container">
+                <h2>Profile</h2>
+
+                <!-- Profile Image Section -->
+
+                <div class="profile-image-container">
+                  <!-- Display the current profile image -->
+
+                  <img
+                    id="profile-image"
+                    class="profile-image"
+                    src="/friendsbook/image/Default_pfp.jpeg"
+                  />
+
+                  <!-- Camera Icon for Upload -->
+
+                
+                </div>
+              </div>
+            </div>
+
+            <div id="part3">
+                
+              <div>
+                <span id="followersCount" onclick="toggleFollowers()">0</span
+                ><br />
+
+                <button id="followButton">Followers</button>
+
+                <ul id="followersList"></ul>
+
+                <!-- Display followers here -->
+
+                <div id="followers-error-message" style="display: none">
+                  Failed to load followers.
+                </div>
+              </div>
+
+              <div>
+                <span id="followingsCount" onclick="toggleFollowings()">0</span
+                ><br />
+
+                <button id="followingButton">Followings</button>
+
+                <ul id="followingsList"></ul>
+
+                <!-- This will display the list of followings -->
+
+                <div
+                  id="following-error-message"
+                  style="display: none; color: red"
+                >
+                  Failed to load followings.
+                </div>
+              </div>
+
+              <div>
+                <span id="postsCount">0</span><br/>
+
+                <button id="load-post">Posts</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="box2">
+          <div id="part1">
+            <div class="box_inner_2">
+               <div class="bio-dynamic visible">
+               <p th:text="${user.userId}"></p>
+    
+               <p th:text="${user.userEmail}"></p>
+    
+               <p th:text="${user.userBio}"></p>
+               </div>
+              </div>
+            </div>
+          </div>
+
+        <div id="posts-container">
+            <!-- Posts will be dynamically added here -->
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var userEmail = "[[${user.userEmail}]]";
+      var userId = "[[${user.userId}]]";
+      var currentUserId = "[[${currentUser.userId}]]";
+      localStorage.setItem("userId", userId);
+      if(currentUserId){
+      localStorage.setItem("currentUserId", currentUserId);
+      }
+      localStorage.setItem("userEmail", userEmail);
+    </script>
+
+    <script src="/friendsbook/js/userProfile.js"></script>
+  </body>
+</html>

@@ -1,0 +1,100 @@
+body {
+    font-family: Arial, sans-serif;
+  
+    background-color: #f4f4f4;
+  
+    background: rgb(238,174,202);
+  background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+  
+    margin: 0;
+  
+    padding: 0;
+  
+    display: flex;
+  
+    justify-content: center;
+  
+    align-items: center;
+  
+    height: 100%; /* Full height */
+  
+    position: relative;
+  }
+
+  .logo {
+    position: absolute;
+    top: 8px;
+    left: 20px;
+    font-size: 25px;
+    font-family: 'Times New Roman', Times, serif;
+  }
+
+.friend{
+    color: #002244;
+    color: #980540;
+    font-weight: 500;
+}
+.book{
+    color:#002244;
+}
+
+.container{
+    width: 70%;
+    height:100vh;
+    background-color:#CCCCFF;
+    margin-top:7rem;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom:4rem;
+    gap: 10px;
+}
+
+.box1{
+    width: 70%;
+    height: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+.box1>p{
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.box2{
+    width: 70%;
+    height: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    overflow-y : auto;
+     overflow-x : auto;
+}
+
+
+
+.box3{
+    width: 70%;
+    height: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    overflow-y : auto;
+     overflow-x : auto;
+}
+
+.box4{
+    width: 70%;
+    height: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    overflow-y : auto;
+     overflow-x : auto;
+}

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+
+  <title>Insert title here</title>
+  <link rel="stylesheet" href="/friendsbook/css/home.css" />
+</head>
+
+<body>
+  <div class="logo">
+    <p class="friend">Friends<span class="book">Book</span></p>
+  </div>
+
+  <div class="container">
+    <div class="box1">
+      <p>UserId: <span id="Id"></span></p>
+      <p>Email: <span id="userEmail"></span></p>
+    </div>
+    <div class="box2">
+      <h1>Notifications</h1>
+
+      <!-- Notification Button -->
+
+      <button id="notification-button" onclick="getNotifications()">
+        Get Notifications  <span id="notification-count"></span>
+      </button>
+ 
+
+      <!-- Notifications Container -->
+
+      <div id="notifications-container">
+
+
+        <div id="notifications-list"></div>
+
+      </div>
+    </div>
+    <div class="box3">
+      <h1>All Users</h1>
+
+      <button onclick="getAllUsers()">Get All Users</button>
+
+      <div id="all-users" style="display: none">
+        <h2>Users List</h2>
+
+        <ul id="users-list"></ul>
+      </div>
+    </div>
+    <div class="box4">
+      <h1>Search User by ID</h1>
+
+      <input type="text" id="userId" placeholder="Enter User ID" />
+
+      <button onclick="fetchUserData()">Search</button>
+
+      <div id="user-info" style="display: none">
+        <h2>User Information</h2>
+
+        <!-- <p><strong>Name:</strong> <span id="user-name"></span></p> -->
+
+        <p><strong>Email:</strong> <span id="user-email"></span></p>
+
+        <p><strong>ID:</strong> <span id="user-id"></span></p>
+
+        <!--<button id="follow-button" onclick="sendFriendRequest()">
+          Follow
+        </button>-->
+         <div id="follow-button"></div>
+      </div>
+
+      <div id="error-message" style="display: none">
+        <p style="color: red">User not found or error occurred.</p>
+      </div>
+    </div>
+  </div>
+  <div>
+          <div id="followingpostsContainer"></div>
+          
+        </div>
+  <button id="profileeButton">profile</button>
+  <script>
+    // Retrieving data from localStorage
+
+    const userId = localStorage.getItem("userId");
+
+    const userEmail = localStorage.getItem("userEmail");
+
+    // Display the data
+
+    document.getElementById("Id").textContent = userId;
+
+    document.getElementById("userEmail").textContent = userEmail;
+    
+    const userIdSpan = document.getElementById('user-id');
+    
+    // Add click event listener to the span
+    userIdSpan.addEventListener('click', function() {
+        const userId = userIdSpan.textContent; // Retrieve the userId from the data attribute
+        console.log(userId);
+        const currentUserId = localStorage.getItem("userId");
+        console.log(currentUserId);
+        // Redirect to backend endpoint
+        window.location.href = `/friendsbook/getusers/${userId}/${currentUserId}`;
+    });
+    
+  </script>
+
+  <script src="/friendsbook/js/home.js"></script>
+</body>
+
+</html>

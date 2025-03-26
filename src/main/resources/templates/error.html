@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+   <link rel="stylesheet" href="/friendsbook/css/error.css" />
+</head>
+<body>
+<div class="logo">
+<p class="friend">Friends<span class="book">Book</span></p>
+</div>
+<div class="container">
+<h1>Something Went Wrong</h1>
+<p>please connect with your operator with following issue : </p>
+<h3 th:text=${exception}>exception</h3>
+<button onClick="history_back()">Go back</button>
+    <script>
+        function history_back() {
+            window.history.back();
+        } 
+    </script>
+</div>
+</body>
+</html>

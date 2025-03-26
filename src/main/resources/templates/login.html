@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>login</title>
+
+    <link rel="stylesheet" href="/friendsbook/css/login.css" />
+  </head>
+
+  <body>
+    
+    
+    <div class="logo">
+        <p class="friend">Friends<span class="book">Book</span></p>  
+    </div>
+    
+    
+    <div class="container">
+      
+        
+      <h2>Login</h2>
+
+      <form th:action="@{/generateToken}" method="POST">
+        <label for="userEmail"><b>User Email</b></label>
+
+        <input
+          type="text"
+          placeholder="Enter Useremail"
+          name="userEmail"
+          required
+        />
+
+        <br />
+
+        <label for="password"><b>User Password</b></label>
+
+        <input
+          type="password"
+          placeholder="Enter UserPassword"
+          name="password"
+          required
+        />
+
+        <br />
+
+        <div th:if="${error != null}">
+          <span style="color: red" th:text="${error}"></span>
+        </div>
+
+        <br />
+
+        <button type="submit">Login</button>
+        
+        <div class="reg">
+            <span>Don't have account | <a href="/friendsbook/register">Register</a></span
+          ></div>
+        
+      </form>
+    </div>
+
+    <script>
+      localStorage.clear();
+    </script>
+  </body>
+</html>

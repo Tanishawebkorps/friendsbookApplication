@@ -1,0 +1,47 @@
+@charset "UTF-8";
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgb(180, 143, 215);
+    border-radius: 20px;
+    padding:50px;
+    background-color: whitesmoke;
+}
+body{
+    
+    background: rgb(238,174,202);
+  background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+  
+    margin: 0;
+  
+    padding: 0;
+  
+    display: flex;
+  
+    justify-content: center;
+  
+    align-items: center;
+  
+    height: 100vh; /* Full height */
+  
+    position: relative;
+
+}
+.logo {
+    position: fixed;
+    top: 8px;
+    left: 20px;
+    font-size: 25px;
+    font-family: 'Times New Roman', Times, serif;
+  }
+
+.friend{
+    color: #002244;
+    color: #980540;
+    font-weight: 500;
+}
+.book{
+    color:#002244;
+}
