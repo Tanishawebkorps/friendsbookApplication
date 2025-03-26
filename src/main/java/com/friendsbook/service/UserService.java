@@ -3,13 +3,20 @@ package com.friendsbook.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
+import com.friendsbook.entity.Captchaa;
 import com.friendsbook.entity.Users;
+import com.friendsbook.helper.PasswordValidator;
 import com.friendsbook.repository.ImageRepository;
 import com.friendsbook.repository.UserRepository;
+
+import jakarta.servlet.http.HttpSession;
 
 @Service
 public class UserService {
@@ -19,6 +26,9 @@ public class UserService {
 
 	@Autowired
 	private ImageRepository userImageRepository;
+
+	@Autowired
+	private PasswordEncoder encoder;
 
 	public static String generateUserId(String userName) {
 		StringBuilder username = new StringBuilder();
@@ -46,7 +56,7 @@ public class UserService {
 			return user;
 		}
 
-			return null;
+		return null;
 
 	}
 
@@ -62,14 +72,6 @@ public class UserService {
 		}
 	}
 
-	public Users getUserIdByUserEmail(String userEmail) {
-		return userRepository.findUserIdByUserEmail(userEmail);
-	}
-
-	public Users saveUser(Users user) {
-		return userRepository.save(user);
-	}
-
 	public List<Users> getAllUsers() {
 		return (List<Users>) userRepository.findAll();
 	}
@@ -82,6 +84,48 @@ public class UserService {
 		user.setUserBio(newBio);
 		userRepository.save(user);
 		return true;
+	}
+
+	public boolean isEmailAlreadyRegistered(String userEmail) {
+		Users getByEmail = getUserByUserEmail(userEmail);
+		return getByEmail != null;
+	}
+
+	public boolean isCaptchaValid(String captchaInput, String correctCaptcha) {
+		return captchaInput.equalsIgnoreCase(correctCaptcha);
+	}
+
+	public void generateAndSetNewCaptcha(HttpSession session, Model model) {
+		Captchaa newCaptcha = CaptchaGenerator.getCaptcha();
+		session.setAttribute("correctCaptcha", newCaptcha.getHiddenCaptcha());
+		model.addAttribute("captcha", newCaptcha);
+	}
+
+	public boolean isPasswordValid(String password) {
+		return PasswordValidator.isValidPassword(password);
+	}
+
+	public boolean registerUser(String userName, String userEmail, String password) {
+		String userId = generateUserId(userName);
+		Users getUser = getUserByUserId(userId);
+		while (getUser != null) {
+			userId = generateUserId(userName);
+			getUser = getUserByUserId(userId);
+		}
+
+		Users user = new Users();
+		user.setUserId(userId);
+		user.setName(userName);
+		user.setUserEmail(userEmail);
+		user.setPassword(encoder.encode(password));
+		user.setUserBio("");
+
+		saveUser(user);
+		return true;
+	}
+
+	public void saveUser(Users user) {
+		userRepository.save(user);
 	}
 
 }

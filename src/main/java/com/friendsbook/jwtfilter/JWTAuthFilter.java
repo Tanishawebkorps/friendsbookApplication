@@ -67,7 +67,6 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 				}
 			}
 		} catch (io.jsonwebtoken.ExpiredJwtException ex) {
-			System.out.println("JWT expired. Clearing cookie and redirecting to login.");
 			Cookie expiredCookie = new Cookie("jwt", null);
 			expiredCookie.setHttpOnly(true);
 			expiredCookie.setMaxAge(0);

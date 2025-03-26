@@ -27,101 +27,99 @@ import jakarta.transaction.Transactional;
 @Service
 public class PostService {
 
-    @Autowired
-    private PostRepository postRepository;
+	@Autowired
+	private PostRepository postRepository;
 
-    @Autowired
-    FollowersRepository followerRepository;
+	@Autowired
+	FollowersRepository followerRepository;
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-    @Autowired
-    CommentService commentService;
-    @Autowired
-    LikeService likeService;
+	@Autowired
+	CommentService commentService;
+	@Autowired
+	LikeService likeService;
 
-    public Map<String, Object> uploadPost(String userId, MultipartFile file, String caption) throws IOException {
-        Users user = userService.getUserByUserId(userId);
-        if (user == null) {
-            throw new RuntimeException("User not found with id: " + userId);
-        }
+	public Map<String, Object> uploadPost(String userId, MultipartFile file, String caption) throws IOException {
+		Users user = userService.getUserByUserId(userId);
+		if (user == null) {
+			throw new RuntimeException("User not found with id: " + userId);
+		}
 
-        byte[] imageBytes = file.getBytes();
+		byte[] imageBytes = file.getBytes();
 
-        Posts post = new Posts();
-        post.setCaption(caption);
-        post.setImage(imageBytes);
-        post.setUser(user);
-        post.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+		Posts post = new Posts();
+		post.setCaption(caption);
+		post.setImage(imageBytes);
+		post.setUser(user);
+		post.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
-        Posts savedPost = postRepository.save(post);
+		Posts savedPost = postRepository.save(post);
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("postId", savedPost.getPostId());
-        response.put("imageUrl", "/post/" + savedPost.getPostId());
+		Map<String, Object> response = new HashMap<>();
+		response.put("postId", savedPost.getPostId());
+		response.put("imageUrl", "/post/" + savedPost.getPostId());
 
-        return response;
-    }
+		return response;
+	}
 
-    @Transactional
-    public List<PostDTO> getPostsFromFollowings(String userId) {
-        Users user = userService.getUserByUserId(userId);
+	@Transactional
+	public List<PostDTO> getPostsFromFollowings(String userId) {
+		Users user = userService.getUserByUserId(userId);
 
-        if (user == null)
-            return Collections.emptyList();
+		if (user == null)
+			return Collections.emptyList();
 
+		Set<Followings> followings = user.getFollowings();
 
-        Set<Followings> followings = user.getFollowings();
+		if (followings == null || followings.isEmpty()) {
+			return Collections.emptyList();
+		}
+		List<Users> followingUsers = followings.stream().map(Followings::getFollowedByUser)
+				.collect(Collectors.toList());
 
-        if (followings == null || followings.isEmpty()) {
-            return Collections.emptyList();
-        }
-        List<Users> followingUsers = followings.stream().map(Followings::getFollowedByUser)
-                .collect(Collectors.toList());
+		List<Posts> posts = postRepository.findByUserInOrderByCreatedAtDesc(followingUsers);
 
-        List<Posts> posts = postRepository.findByUserInOrderByCreatedAtDesc(followingUsers);
+		if (posts == null || posts.isEmpty()) {
+			return Collections.emptyList();
+		}
 
-        if (posts == null || posts.isEmpty()) {
-            return Collections.emptyList();
-        }
+		List<PostDTO> postDTOs = posts.stream().map(post -> {
+			List<CommentsDTO> commentDTOs = commentService.getCommentsByPost(post.getPostId());
+			Long likeCount = likeService.getLikeCount(post.getPostId());
+			return new PostDTO(post.getPostId(), post.getUser().getUserId(), post.getCaption(), post.getImage(),
+					commentDTOs, likeCount);
+		}).collect(Collectors.toList());
+		return postDTOs;
+	}
 
-        List<PostDTO> postDTOs = posts.stream().map(post -> {
-            List<CommentsDTO> commentDTOs = commentService.getCommentsByPost(post.getPostId());
-            Long likeCount = likeService.getLikeCount(post.getPostId());
+	public List<PostDTO> getAllPostsByUser(String userId) {
 
-            return new PostDTO(post.getPostId(), post.getUser().getUserId(), post.getCaption(), post.getImage(),
-                    commentDTOs, likeCount);
-        }).collect(Collectors.toList());
-        return postDTOs;
-    }
+		Users user = userService.getUserByUserId(userId);
+		if (user != null) {
+			List<Posts> posts = postRepository.findByUser(user);
+			return posts.stream().map(post -> {
+				List<CommentsDTO> commentDTOs = commentService.getCommentsByPost(post.getPostId());
+				Long likeCount = likeService.getLikeCount(post.getPostId());
+				String getUser = post.getUser().getUserId();
+				return new PostDTO(post.getPostId(), getUser, post.getCaption(), post.getImage(), commentDTOs,
+						likeCount);
+			}).collect(Collectors.toList());
+		}
+		return Collections.emptyList();
+	}
 
-    public List<PostDTO> getAllPostsByUser(String userId) {
+	public byte[] getPost(Long id) {
+		Optional<Posts> image = postRepository.findById(id);
+		return image.map(Posts::getImage).orElse(null);
+	}
 
-        Users user = userService.getUserByUserId(userId);
-        if (user != null) {
-            List<Posts> posts = postRepository.findByUser(user);
-            return posts.stream().map(post -> {
-                List<CommentsDTO> commentDTOs = commentService.getCommentsByPost(post.getPostId());
-                Long likeCount = likeService.getLikeCount(post.getPostId());
-                String getUser = post.getUser().getUserId();
-                return new PostDTO(post.getPostId(), getUser, post.getCaption(), post.getImage(), commentDTOs,
-                        likeCount);
-            }).collect(Collectors.toList());
-        }
-        return null;
-    }
+	public long getPostCountForUser(Users user) {
+		return postRepository.countByUser(user);
+	}
 
-    public byte[] getPost(Long id) {
-        Optional<Posts> image = postRepository.findById(id);
-        return image.map(Posts::getImage).orElse(null);
-    }
-
-    public long getPostCountForUser(Users user) {
-        return postRepository.countByUser(user);
-    }
-
-    public Posts findById(long postId) {
-        return postRepository.findByPostId(postId);
-    }
+	public Posts findById(long postId) {
+		return postRepository.findByPostId(postId);
+	}
 }

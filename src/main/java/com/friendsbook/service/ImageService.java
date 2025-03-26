@@ -15,40 +15,28 @@ import com.friendsbook.repository.UserRepository;
 @Service
 public class ImageService {
 
-    @Autowired
-    private ImageRepository imageRepository;
+	@Autowired
+	private ImageRepository imageRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
+	public UserImage saveImage(String userId, MultipartFile file) throws IOException {
+		UserImage image = new UserImage();
+		image.setFileName(file.getOriginalFilename());
+		image.setImageData(file.getBytes());
+		Users user = userService.getUserByUserId(userId);
+		image = imageRepository.save(image);
+		user.setProfile(image);
+		userRepository.save(user);
+		return image;
+	}
 
-    public UserImage saveImage(String userId, MultipartFile file) throws IOException {
-
-        UserImage image = new UserImage();
-        image.setFileName(file.getOriginalFilename());
-        image.setImageData(file.getBytes());
-
-
-        Users user = userService.getUserByUserId(userId);
-
-
-        image = imageRepository.save(image);
-
-
-        user.setProfile(image);
-        userRepository.save(user);
-
-
-        return image;
-    }
-
-
-    public byte[] getImage(Long id) {
-        Optional<UserImage> image = imageRepository.findById(id);
-        return image.map(UserImage::getImageData).orElse(null);
-    }
+	public byte[] getImage(Long id) {
+		Optional<UserImage> image = imageRepository.findById(id);
+		return image.map(UserImage::getImageData).orElse(null);
+	}
 }
-

@@ -105,7 +105,7 @@
     
                <p th:text="${user.userEmail}"></p>
     
-               <p th:text="${user.userBio}"></p>
+               <p th:text="${user.userBio}" id="bio-area"></p>
                </div>
               <button onclick="toggleDiv()">update Bio</button>
 
@@ -125,6 +125,7 @@
                   ></textarea>
 
                   <button
+                  
                     type="button"
                     class="save-bio-btn"
                     onclick="updateBio()"

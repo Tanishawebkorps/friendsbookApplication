@@ -16,19 +16,19 @@ import com.friendsbook.service.CommentService;
 @RestController
 public class CommentController {
 
-    @Autowired
-    CommentService commentService;
+	@Autowired
+	CommentService commentService;
 
-    @PostMapping("/addcomment/{postId}/{userId}/{commentContent}")
-    public ResponseEntity<String> addComment(@PathVariable Long postId, @PathVariable String userId,
-                                             @PathVariable String commentContent) {
-        String response = commentService.addComment(postId, userId, commentContent);
-        return ResponseEntity.ok(response);
-    }
+	@PostMapping("/addcomment/{postId}/{userId}/{commentContent}")
+	public ResponseEntity<String> addComment(@PathVariable Long postId, @PathVariable String userId,
+			@PathVariable String commentContent) {
+		String response = commentService.addComment(postId, userId, commentContent);
+		return ResponseEntity.ok(response);
+	}
 
-    @GetMapping("/getComment/{postId}")
-    public ResponseEntity<List<CommentsDTO>> getCommentsByPost(@PathVariable Long postId) {
-        List<CommentsDTO> comments = commentService.getCommentsByPost(postId);
-        return ResponseEntity.ok(comments);
-    }
+	@GetMapping("/getComment/{postId}")
+	public ResponseEntity<List<CommentsDTO>> getCommentsByPost(@PathVariable Long postId) {
+		List<CommentsDTO> comments = commentService.getCommentsByPost(postId);
+		return ResponseEntity.ok(comments);
+	}
 }

@@ -13,13 +13,6 @@ import com.friendsbook.service.UserService;
 
 @Controller
 public class HomeController {
-	@Autowired
-	private JwtService jwtService;
-
-	@Autowired
-	private UserService userService;
-	@Autowired
-	private AuthenticationManager authenticationManager;
 
 	@GetMapping("/home")
 	public String homeHandler() {

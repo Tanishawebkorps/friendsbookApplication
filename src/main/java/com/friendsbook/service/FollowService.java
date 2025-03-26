@@ -30,7 +30,6 @@ public class FollowService {
 			followers.setFollowedUser(followedUser);
 			followersRepository.save(followers);
 		}
-
 		if (!followingsRepository.existsByFollowingAndFollowedByUser(follower, followedUser)) {
 			Followings followings = new Followings();
 			followings.setFollowing(follower);
@@ -43,7 +42,6 @@ public class FollowService {
 		Users follower = usersRepository.findById(followerId).orElseThrow(() -> new RuntimeException("User not found"));
 		Users followedUser = usersRepository.findById(followedUserId)
 				.orElseThrow(() -> new RuntimeException("User not found"));
-
 		Followers followers = followersRepository.findByFollowerAndFollowedUser(follower, followedUser)
 				.orElseThrow(() -> new RuntimeException("Following relationship not found"));
 		Followings followings = followingsRepository.findByFollowingAndFollowedByUser(follower, followedUser)

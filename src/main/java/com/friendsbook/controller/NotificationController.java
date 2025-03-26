@@ -26,103 +26,104 @@ import com.friendsbook.service.UserService;
 @RequestMapping("/notifications")
 public class NotificationController {
 
-    @Autowired
-    private NotificationService notificationService;
+	@Autowired
+	private NotificationService notificationService;
 
-    @Autowired
-    private PostService postService;
+	@Autowired
+	private PostService postService;
 
-    @Autowired
-    UserService userService;
+	@Autowired
+	UserService userService;
 
-    @Autowired
-    private NotificationRepository notificationRepository;
+	@Autowired
+	private NotificationRepository notificationRepository;
 
-    @PostMapping("/sendFriendRequest")
-    public ResponseEntity<String> sendFriendRequest(@RequestParam String senderId, @RequestParam String recipientId) {
-        String response = notificationService.sendFriendRequest(senderId, recipientId);
-        return ResponseEntity.ok(response);
-    }
-    @DeleteMapping("/friend-requests/{senderId}/{recipientId}")
-    public ResponseEntity<Map<String, String>> cancelFriendRequest(@PathVariable String senderId, @PathVariable String recipientId) {
-        
-        String response = notificationService.cancelFriendRequest(senderId, recipientId);
+	@PostMapping("/sendFriendRequest")
+	public ResponseEntity<String> sendFriendRequest(@RequestParam String senderId, @RequestParam String recipientId) {
+		String response = notificationService.sendFriendRequest(senderId, recipientId);
+		return ResponseEntity.ok(response);
+	}
 
-        Map<String, String> responseMap = new HashMap<>();
-        responseMap.put("message", response);  
+	@DeleteMapping("/friend-requests/{senderId}/{recipientId}")
+	public ResponseEntity<Map<String, String>> cancelFriendRequest(@PathVariable String senderId,
+			@PathVariable String recipientId) {
 
-        return ResponseEntity.ok(responseMap);
-    }
+		String response = notificationService.cancelFriendRequest(senderId, recipientId);
 
-    @PostMapping("/acceptFriendRequest")
-    public ResponseEntity<String> acceptFriendRequest(@RequestParam Long notificationId,
-                                                      @RequestParam String recipientId) {
-        String response = notificationService.acceptFriendRequest(notificationId, recipientId);
-        return ResponseEntity.ok(response);
-    }
+		Map<String, String> responseMap = new HashMap<>();
+		responseMap.put("message", response);
 
-    @PostMapping("/declineFriendRequest")
-    public ResponseEntity<String> declineFriendRequest(@RequestParam Long notificationId) {
-        String response = notificationService.declineFriendRequest(notificationId);
-        return ResponseEntity.ok(response);
-    }
+		return ResponseEntity.ok(responseMap);
+	}
 
-    @GetMapping("/notifications/getSenderName")
-    public String getSenderName(@RequestParam Long notificationId) {
-        Notification notification = (notificationRepository.findById(notificationId)).get();
-        Users sender = notification.getSender();
-        return sender.getName();
-    }
+	@PostMapping("/acceptFriendRequest")
+	public ResponseEntity<String> acceptFriendRequest(@RequestParam Long notificationId,
+			@RequestParam String recipientId) {
+		String response = notificationService.acceptFriendRequest(notificationId, recipientId);
+		return ResponseEntity.ok(response);
+	}
 
-    @GetMapping("/user/{userId}/status/{status}")
-    public List<Notification> getNotifications(@PathVariable String userId, @PathVariable String status) {
-        Users user = userService.getUserByUserId(userId);
-        return notificationService.getNotificationsByUserAndStatus(user, status);
-    }
+	@PostMapping("/declineFriendRequest")
+	public ResponseEntity<String> declineFriendRequest(@RequestParam Long notificationId) {
+		String response = notificationService.declineFriendRequest(notificationId);
+		return ResponseEntity.ok(response);
+	}
 
-    @PostMapping("/update-status/{notificationId}")
-    public ResponseEntity<String> updateNotificationStatus(@PathVariable Long notificationId, @RequestParam String status) {
-        notificationService.updateNotificationStatus(notificationId, status);
-        return ResponseEntity.ok("updated");
-    }
+	@GetMapping("/notifications/getSenderName")
+	public String getSenderName(@RequestParam Long notificationId) {
+		Notification notification = (notificationRepository.findById(notificationId)).get();
+		Users sender = notification.getSender();
+		return sender.getName();
+	}
 
-    @GetMapping("/notification/countPerUser")
-    public List<Object[]> getNotificationCountPerUser() {
-        return notificationService.getNotificationCountPerUser();
-    }
+	@GetMapping("/user/{userId}/status/{status}")
+	public List<Notification> getNotifications(@PathVariable String userId, @PathVariable String status) {
+		Users user = userService.getUserByUserId(userId);
+		return notificationService.getNotificationsByUserAndStatus(user, status);
+	}
 
-    @PostMapping("/sendLikeNotification")
-    public String sendLikeNotification(@RequestParam Long postId, @RequestParam String senderId) {
-        try {
+	@PostMapping("/update-status/{notificationId}")
+	public ResponseEntity<String> updateNotificationStatus(@PathVariable Long notificationId,
+			@RequestParam String status) {
+		notificationService.updateNotificationStatus(notificationId, status);
+		return ResponseEntity.ok("updated");
+	}
 
-            Posts post = postService.findById(postId);
-            Users sender = userService.getUserByUserId(senderId);
-            Users postOwner = post.getUser();
+	@GetMapping("/notification/countPerUser")
+	public List<Object[]> getNotificationCountPerUser() {
+		return notificationService.getNotificationCountPerUser();
+	}
 
-            Notification notification = new Notification();
-            notification.setMessage(sender.getName() + " liked your post!");
-            notification.setStatus("pending");
-            notification.setSender(sender);
-            notification.setUser(postOwner);
+	@PostMapping("/sendLikeNotification")
+	public String sendLikeNotification(@RequestParam Long postId, @RequestParam String senderId) {
+		try {
+			Posts post = postService.findById(postId);
+			Users sender = userService.getUserByUserId(senderId);
+			Users postOwner = post.getUser();
 
-            notificationService.saveNotification(notification);
+			Notification notification = new Notification();
+			notification.setMessage(sender.getName() + " liked your post!");
+			notification.setStatus("pending");
+			notification.setSender(sender);
+			notification.setUser(postOwner);
 
-            return " post like successfully Notification sent successfully!";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "Error sending notification: " + e.getMessage();
-        }
-    }
+			notificationService.saveNotification(notification);
+			return " post like successfully Notification sent successfully!";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "Error sending notification: " + e.getMessage();
+		}
+	}
 
-    @GetMapping("/check/follow")
-    public boolean checkFollowRequest(@RequestParam String senderId, @RequestParam String recipientId) {
+	@GetMapping("/check/follow")
+	public boolean checkFollowRequest(@RequestParam String senderId, @RequestParam String recipientId) {
 
-        Users sender = userService.getUserByUserId(senderId);
-        Users recipient = userService.getUserByUserId(recipientId);
+		Users sender = userService.getUserByUserId(senderId);
+		Users recipient = userService.getUserByUserId(recipientId);
 
-        if (sender == null || recipient == null)
-            return false;
-        return notificationService.hasNotificationFromSenderToUser(recipient, sender);
-    }
+		if (sender == null || recipient == null)
+			return false;
+		return notificationService.hasNotificationFromSenderToUser(recipient, sender);
+	}
 
 }

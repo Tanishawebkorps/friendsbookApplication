@@ -15,10 +15,5 @@ public class PostDTO {
 	private byte[] image; // The URL to the image
 	private List<CommentsDTO> comments;
 	private Long likeCount;
-
-	@Override
-	public String toString() {
-		return "PostDTO [postId=" + postId + ", userId=" + userId + ", caption=" + caption + ", image="
-				+ Arrays.toString(image) + ", comments=" + comments + ", likeCount=" + likeCount + "]";
-	}
+	
 }

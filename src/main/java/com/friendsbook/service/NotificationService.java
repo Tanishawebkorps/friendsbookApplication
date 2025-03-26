@@ -64,24 +64,24 @@ public class NotificationService {
 	}
 
 	public String cancelFriendRequest(String senderId, String recipientId) {
-	    Users sender = userRepository.findById(senderId)
-	            .orElseThrow(() -> new RuntimeException("Sender not found"));
-	    Users recipient = userRepository.findById(recipientId)
-	            .orElseThrow(() -> new RuntimeException("Recipient not found"));
-	    FriendRequest existingRequest = friendRequestRepository.findBySenderAndRecipientAndStatus(sender, recipient, "pending");    
-	    if (existingRequest == null) {
-	        return "No pending friend request found to cancel.";
-	    }
-	    friendRequestRepository.delete(existingRequest);
-	    Notification existingNotification = notificationRepository.findBySenderAndUserAndMessage(sender, recipient, sender.getUserId() + " sent you a friend request.");
-	    
-	    if (existingNotification != null) {
-	        notificationRepository.delete(existingNotification);
-	    }
-	    return "Friend request canceled successfully.";
+		Users sender = userRepository.findById(senderId).orElseThrow(() -> new RuntimeException("Sender not found"));
+		Users recipient = userRepository.findById(recipientId)
+				.orElseThrow(() -> new RuntimeException("Recipient not found"));
+		FriendRequest existingRequest = friendRequestRepository.findBySenderAndRecipientAndStatus(sender, recipient,
+				"pending");
+		if (existingRequest == null) {
+			return "No pending friend request found to cancel.";
+		}
+		friendRequestRepository.delete(existingRequest);
+		Notification existingNotification = notificationRepository.findBySenderAndUserAndMessage(sender, recipient,
+				sender.getUserId() + " sent you a friend request.");
+
+		if (existingNotification != null) {
+			notificationRepository.delete(existingNotification);
+		}
+		return "Friend request canceled successfully.";
 	}
 
-	
 	public String acceptFriendRequest(Long notificationId, String recipientId) {
 		Notification notification = notificationRepository.findById(notificationId)
 				.orElseThrow(() -> new RuntimeException("Notification not found"));

@@ -388,8 +388,7 @@ function hideLoader() {
 	               followButton.textContent = "Request Sent";
 	               console.log("Button text set to 'Request Sent'");
 
-	               
-	               followButton.addEventListener('dblclick', () => {
+	               followButton.addEventListener("click", () => {
 	                   console.log("Double-click detected, attempting to cancel friend request");
 	                   cancelFriendRequest(senderId, recipientId);  
 	               });

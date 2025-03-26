@@ -45,6 +45,7 @@ function uploadImage() {
 		});
 }
 function toggleDiv() {
+	console.log("in toggleDiv");
 	var div = document.getElementsByClassName('bio-container')[0];
 	if (div.classList.contains('hidden')) {
 		div.classList.remove('hidden');
@@ -68,7 +69,7 @@ function togglePostDiv() {
 function updateBio() {
 	console.log("inside bio update");
 	var userBio = document.getElementById('bio-input').value;  
-
+    var bio = document.getElementById('bio-area');
 	if (!userBio) {
 		alert("Please enter a bio!");
 		return;
@@ -84,15 +85,14 @@ function updateBio() {
 		.then(success => {
 			const messageElement = document.getElementById('message');
 			if (success) {
+				bio.textContent=userBio;
 				messageElement.textContent = "Bio updated successfully!";
 				messageElement.style.color = "green";
-				
 				alert("Bio Updated successfully!");
 			} else {
 				messageElement.textContent = "Failed to update bio.";
 				messageElement.style.color = "red";
-				
-				alert("Failed to update bio.");
+			    alert("Failed to update bio.");
 			}
 		})
 		.catch(error => {

@@ -24,7 +24,6 @@ import com.friendsbook.entity.Captchaa;
 import com.friendsbook.entity.Users;
 import com.friendsbook.helper.PasswordValidator;
 import com.friendsbook.service.CaptchaGenerator;
-import com.friendsbook.service.ImageService;
 import com.friendsbook.service.JwtService;
 import com.friendsbook.service.UserService;
 
@@ -41,9 +40,6 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private ImageService imageService;
 
 	@Autowired
 	private JwtService jwtService;
@@ -131,57 +127,32 @@ public class UserController {
 
 		String correctCaptcha = (String) session.getAttribute("correctCaptcha");
 
-		Users getByEmail = userService.getUserByUserEmail(userEmail);
-		if (getByEmail != null) {
-
+		if (userService.isEmailAlreadyRegistered(userEmail)) {
 			model.addAttribute("message", "Email is already registered. Please use a different email.");
-
-			Captchaa newCaptcha = CaptchaGenerator.getCaptcha();
-			session.setAttribute("correctCaptcha", newCaptcha.getHiddenCaptcha());
-			model.addAttribute("captcha", newCaptcha);
-
+			userService.generateAndSetNewCaptcha(session, model);
 			return "register";
 		}
+
 		if (!PasswordValidator.isValidPassword(password)) {
 			model.addAttribute("message",
-					"Please Enter Password with 8 character include numbers , upper case ,lower case , special symbol ");
-
-			Captchaa newCaptcha = CaptchaGenerator.getCaptcha();
-			session.setAttribute("correctCaptcha", newCaptcha.getHiddenCaptcha());
-			model.addAttribute("captcha", newCaptcha);
-
+					"Please enter a valid password with 8 characters including numbers, upper case, lower case, and special symbols.");
+			userService.generateAndSetNewCaptcha(session, model);
 			return "register";
 		}
-		if (captcha.getCaptcha().equalsIgnoreCase(correctCaptcha)) {
+
+		if (userService.isCaptchaValid(captcha.getCaptcha(), correctCaptcha)) {
 			model.addAttribute("message", "CAPTCHA verification successful!");
 
-			String userId = userService.generateUserId(userName);
-			Users getUser = userService.getUserByUserId(userId);
-
-			while (getUser != null) {
-				userId = userService.generateUserId(userName);
-				getUser = userService.getUserByUserId(userId);
+			if (userService.registerUser(userName, userEmail, password)) {
+				return "login";
+			} else {
+				model.addAttribute("message", "User registration failed. Please try again.");
+				userService.generateAndSetNewCaptcha(session, model);
+				return "register";
 			}
-
-			if (getUser == null) {
-				Users user = new Users();
-				user.setUserId(userId);
-				user.setName(userName);
-				user.setUserEmail(userEmail);
-				user.setPassword(encoder.encode(password));
-				user.setUserBio("");
-				userService.saveUser(user);
-			}
-
-			return "login";
 		} else {
-
 			model.addAttribute("message", "Incorrect CAPTCHA. Please try again.");
-
-			Captchaa newCaptcha = CaptchaGenerator.getCaptcha();
-			session.setAttribute("correctCaptcha", newCaptcha.getHiddenCaptcha());
-			model.addAttribute("captcha", newCaptcha);
-
+			userService.generateAndSetNewCaptcha(session, model);
 			return "register";
 		}
 	}
@@ -199,8 +170,6 @@ public class UserController {
 	public String getUserByUserId(@PathVariable String userId, @PathVariable String currentUserId, Model model) {
 		Users user = userService.getUserByUserId(userId);
 		Users currentUser = userService.getUserByUserId(currentUserId);
-		System.out.println("current user : " + currentUser.getUserId());
-		System.out.println("searched user : " + user.getUserId());
 		if (user != null) {
 			model.addAttribute("user", user);
 			model.addAttribute("currentUser", currentUser);
