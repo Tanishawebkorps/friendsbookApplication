@@ -12,7 +12,7 @@ public class PostDTO {
 	private Long postId;
 	private String userId;
 	private String caption;
-	private byte[] image; // The URL to the image
+	private byte[] image;
 	private List<CommentsDTO> comments;
 	private Long likeCount;
 	

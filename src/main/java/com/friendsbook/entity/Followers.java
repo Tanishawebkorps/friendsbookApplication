@@ -1,4 +1,5 @@
 package com.friendsbook.entity;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
@@ -19,21 +20,21 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"followerId", "followedUserId"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "followerId", "followedUserId" }))
 public class Followers {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "followerId" , referencedColumnName="userId")
-    @JsonBackReference
-    private Users follower; 
-    
-    @ManyToOne
-    @JoinColumn(name = "followedUserId" , referencedColumnName="userId")
-    @JsonBackReference
-    private Users followedUser; 
-    
+	@ManyToOne
+	@JoinColumn(name = "followerId", referencedColumnName = "userId")
+	@JsonBackReference
+	private Users follower;
+
+	@ManyToOne
+	@JoinColumn(name = "followedUserId", referencedColumnName = "userId")
+	@JsonBackReference
+	private Users followedUser;
+
 }

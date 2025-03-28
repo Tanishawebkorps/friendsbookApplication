@@ -1,4 +1,5 @@
 package com.friendsbook.entity;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
@@ -19,24 +20,24 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"followingId", "followedByUserId"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "followingId", "followedByUserId" }))
 public class Followings {
-	    @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    private Long id; 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-	    @ManyToOne
-	    @JoinColumn(name = "followingId" , referencedColumnName="userId")
-	    @JsonBackReference
-	    private Users following;  
+	@ManyToOne
+	@JoinColumn(name = "followingId", referencedColumnName = "userId")
+	@JsonBackReference
+	private Users following;
 
-	    @Override
-		public String toString() {
-			return "Followings [id=" + id + ", following=" + following + ", followedByUser=" + followedByUser + "]";
-		}
+	@Override
+	public String toString() {
+		return "Followings [id=" + id + ", following=" + following + ", followedByUser=" + followedByUser + "]";
+	}
 
-		@ManyToOne
-	    @JoinColumn(name = "followedByUserId" , referencedColumnName="userId")
-	    @JsonBackReference
-	    private Users followedByUser; 
+	@ManyToOne
+	@JoinColumn(name = "followedByUserId", referencedColumnName = "userId")
+	@JsonBackReference
+	private Users followedByUser;
 }

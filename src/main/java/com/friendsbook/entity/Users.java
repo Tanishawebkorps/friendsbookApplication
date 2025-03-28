@@ -28,40 +28,37 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 public class Users {
-    @Id
-    @Column(name = "userId", length = 30)
-    private String userId;
+	@Id
+	@Column(name = "userId", length = 30)
+	private String userId;
 
-    @Column(name = "userName", nullable = false, length = 30)
-    private String name;
+	@Column(name = "userName", nullable = false, length = 30)
+	private String name;
 
-   
-    private String password;
+	private String password;
 
-    @Column(name = "userEmail", nullable = false, length = 40 , unique=true)
-    private String userEmail;
+	@Column(name = "userEmail", nullable = false, length = 40, unique = true)
+	private String userEmail;
 
-    @Column(name = "userBio", nullable = true, length = 50)
-    private String userBio;
+	@Column(name = "userBio", nullable = true, length = 50)
+	private String userBio;
 
-    private boolean scope;
- 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "userImageId", referencedColumnName = "id")  
-    private UserImage profile;
+	private boolean scope;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL) 
-    @JsonManagedReference
-    private Set<Posts> posts = new HashSet<>(); 
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "userImageId", referencedColumnName = "id")
+	private UserImage profile;
 
-    @OneToMany(mappedBy = "follower", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JsonManagedReference
-    private Set<Followers> followers = new HashSet<>();
+	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonManagedReference
+	private Set<Posts> posts = new HashSet<>();
 
-    
-    @OneToMany(mappedBy = "following", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JsonManagedReference
-    private Set<Followings> followings = new HashSet<>();
-	
+	@OneToMany(mappedBy = "follower", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@JsonManagedReference
+	private Set<Followers> followers = new HashSet<>();
+
+	@OneToMany(mappedBy = "following", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@JsonManagedReference
+	private Set<Followings> followings = new HashSet<>();
+
 }
-

@@ -18,7 +18,8 @@ public class CommentController {
 
 	@Autowired
 	CommentService commentService;
-
+     
+	
 	@PostMapping("/addcomment/{postId}/{userId}/{commentContent}")
 	public ResponseEntity<String> addComment(@PathVariable Long postId, @PathVariable String userId,
 			@PathVariable String commentContent) {

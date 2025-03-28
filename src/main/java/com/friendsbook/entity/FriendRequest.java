@@ -14,21 +14,20 @@ import lombok.Data;
 @Entity
 public class FriendRequest {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "sender_id")
-    @JsonBackReference
-    private Users sender;
+	@ManyToOne
+	@JoinColumn(name = "sender_id")
+	@JsonBackReference
+	private Users sender;
 
-    @ManyToOne
-    @JoinColumn(name = "recipient_id")
-    @JsonBackReference
-    private Users recipient;
+	@ManyToOne
+	@JoinColumn(name = "recipient_id")
+	@JsonBackReference
+	private Users recipient;
 
-    private String status;
+	private String status;
 
-    
 }

@@ -1,4 +1,5 @@
 package com.friendsbook.entity;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
@@ -20,17 +21,17 @@ import lombok.Setter;
 @Entity
 public class Likes {
 
-	    @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    @Column(name = "likeId")
-	    private Long likeId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "likeId")
+	private Long likeId;
 
-	    @ManyToOne
-	    @JoinColumn(name = "post_Id")
-	    @JsonBackReference
-	    private Posts post;
- 
-	    @ManyToOne
-	    @JoinColumn(name = "user_id") 
-	    private Users user;
+	@ManyToOne
+	@JoinColumn(name = "post_Id")
+	@JsonBackReference
+	private Posts post;
+
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private Users user;
 }

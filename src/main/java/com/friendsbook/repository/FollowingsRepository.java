@@ -12,12 +12,12 @@ import com.friendsbook.entity.Users;
 
 @Repository
 public interface FollowingsRepository extends JpaRepository<Followings, Long> {
-    
+
 	Set<Followings> findByFollowingUserId(String userId);
-    List<Followings> findByFollowedByUser(Users followedByUser);
-	List<Followings> findByFollowedByUser_UserId(String userId);
-	List<Followings> findByFollowing(Users following);
+
 	long countByFollowing(Users following);
-    boolean existsByFollowingAndFollowedByUser(Users following, Users followedByUser);
-    Optional<Followings> findByFollowingAndFollowedByUser(Users following, Users followedByUser);
+
+	boolean existsByFollowingAndFollowedByUser(Users following, Users followedByUser);
+
+	Optional<Followings> findByFollowingAndFollowedByUser(Users following, Users followedByUser);
 }

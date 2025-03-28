@@ -1,6 +1,7 @@
 package com.friendsbook;
 
 import java.util.LinkedHashSet;
+
 import java.util.Set;
 
 import org.springframework.boot.SpringApplication;
@@ -11,6 +12,7 @@ import com.friendsbook.entity.Followers;
 import com.friendsbook.entity.Users;
 import com.friendsbook.repository.UserRepository;
 import com.friendsbook.repository.FollowersRepository;
+
 @SpringBootApplication
 public class FriendsBookApplication {
 

@@ -1,4 +1,5 @@
 package com.friendsbook.entity;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,21 +26,21 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 public class Comments {
-	
-	    @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    @Column(name = "commentId")
-	    private Long commentId;
 
-	    @Column(name = "commentContent", length = 50)
-	    private String commentContent;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "commentId")
+	private Long commentId;
 
-	    @ManyToOne
-	    @JoinColumn(name = "postId")
-	    @JsonBackReference
-	    private Posts post;
- 
-	    @ManyToOne
-	    @JoinColumn(name = "user_id")  
-	    private Users user;
+	@Column(name = "commentContent", length = 50)
+	private String commentContent;
+
+	@ManyToOne
+	@JoinColumn(name = "postId")
+	@JsonBackReference
+	private Posts post;
+
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private Users user;
 }

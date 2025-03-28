@@ -1,6 +1,9 @@
 package com.friendsbook.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,9 +20,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.friendsbook.DTO.UserRegistrationDTO;
+import com.friendsbook.DTO.UsersDTO;
 import com.friendsbook.entity.Captchaa;
 import com.friendsbook.entity.Users;
 import com.friendsbook.helper.PasswordValidator;
@@ -50,7 +56,7 @@ public class UserController {
 	@Autowired
 	private PasswordEncoder encoder;
 
-	@RequestMapping("/login")
+	@GetMapping("/login")
 	public String displayLogin() {
 		return "login.html";
 	}
@@ -100,7 +106,7 @@ public class UserController {
 		}
 	}
 
-	@RequestMapping("/register")
+	@GetMapping("/register")
 	public String displayRegister(Model model, HttpSession session) {
 		Captchaa captchaData = CaptchaGenerator.getCaptcha();
 
@@ -111,59 +117,72 @@ public class UserController {
 	}
 
 	@GetMapping("/search")
-	public ResponseEntity<Users> getUserById(@RequestParam String userId) {
+	public ResponseEntity<UsersDTO> getUserById(@RequestParam String userId) {
 		Users user = userService.getUserByUserId(userId);
+
 		if (user != null) {
-			return ResponseEntity.ok(user);
+
+			UsersDTO userDTO = new UsersDTO(user.getUserId(), user.getUserEmail());
+			return ResponseEntity.ok(userDTO);
 		} else {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 		}
 	}
 
 	@PostMapping("/reguser")
-	public String userRegistrationHandler(@RequestParam(required = true) String userName,
-			@RequestParam(required = true) String userEmail, @RequestParam(required = true) String password,
-			@ModelAttribute("captcha") Captchaa captcha, HttpSession session, Model model) {
+	public ResponseEntity<Map<String, String>> userRegistrationHandler(@RequestBody UserRegistrationDTO registrationDTO,
+			HttpSession session, Model model) {
 
 		String correctCaptcha = (String) session.getAttribute("correctCaptcha");
 
-		if (userService.isEmailAlreadyRegistered(userEmail)) {
-			model.addAttribute("message", "Email is already registered. Please use a different email.");
-			userService.generateAndSetNewCaptcha(session, model);
-			return "register";
+		if (userService.isEmailAlreadyRegistered(registrationDTO.getUserEmail())) {
+			Map<String, String> response = new HashMap<>();
+			response.put("message", "Email is already registered. Please use a different email.");
+			response.put("redirectUrl", "/friendsbook/register");
+			return ResponseEntity.ok(response);
 		}
-
-		if (!PasswordValidator.isValidPassword(password)) {
-			model.addAttribute("message",
+		if (!PasswordValidator.isValidPassword(registrationDTO.getPassword())) {
+			Map<String, String> response = new HashMap<>();
+			response.put("message",
 					"Please enter a valid password with 8 characters including numbers, upper case, lower case, and special symbols.");
-			userService.generateAndSetNewCaptcha(session, model);
-			return "register";
+			response.put("redirectUrl", "/friendsbook/register");
+			return ResponseEntity.ok(response);
 		}
-
+		Captchaa captcha = registrationDTO.getCaptcha();
 		if (userService.isCaptchaValid(captcha.getCaptcha(), correctCaptcha)) {
 			model.addAttribute("message", "CAPTCHA verification successful!");
-
-			if (userService.registerUser(userName, userEmail, password)) {
-				return "login";
+			if (userService.registerUser(registrationDTO.getUserName(), registrationDTO.getUserEmail(),
+					registrationDTO.getPassword())) {
+				Map<String, String> response = new HashMap<>();
+				response.put("message", "Registration successful");
+				response.put("redirectUrl", "/friendsbook/login");
+				return ResponseEntity.ok(response);
 			} else {
-				model.addAttribute("message", "User registration failed. Please try again.");
-				userService.generateAndSetNewCaptcha(session, model);
-				return "register";
+				Map<String, String> response = new HashMap<>();
+				response.put("message", "User registration failed. Please try again.");
+				response.put("redirectUrl", "/friendsbook/register");
+				return ResponseEntity.ok(response);
 			}
 		} else {
-			model.addAttribute("message", "Incorrect CAPTCHA. Please try again.");
-			userService.generateAndSetNewCaptcha(session, model);
-			return "register";
+			Map<String, String> response = new HashMap<>();
+			response.put("message", "Incorrect CAPTCHA. Please try again.");
+			response.put("redirectUrl", "/friendsbook/register");
+			return ResponseEntity.ok(response);
 		}
 	}
 
 	@GetMapping("/users")
-	public ResponseEntity<List<Users>> getAllUsers() {
+	public ResponseEntity<List<UsersDTO>> getAllUsers() {
 		List<Users> users = userService.getAllUsers();
+
 		if (users.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 		}
-		return ResponseEntity.ok(users);
+
+		List<UsersDTO> userDTOs = users.stream().map(user -> new UsersDTO(user.getUserId(), user.getUserEmail()))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok(userDTOs);
 	}
 
 	@GetMapping("/getusers/{userId}/{currentUserId}")

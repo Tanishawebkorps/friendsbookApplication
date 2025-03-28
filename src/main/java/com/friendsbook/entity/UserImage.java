@@ -16,18 +16,17 @@ import lombok.Setter;
 @Setter
 public class UserImage {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @OneToOne(mappedBy = "profile")  
-    @JsonBackReference
-    private Users user;
-    
-    private String fileName; 
-    
-    @Lob 
-    private byte[] imageData;
-    
+	@OneToOne(mappedBy = "profile")
+	@JsonBackReference
+	private Users user;
+
+	private String fileName;
+
+	@Lob
+	private byte[] imageData;
+
 }
-

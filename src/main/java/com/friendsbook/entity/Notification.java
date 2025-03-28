@@ -1,7 +1,5 @@
 package com.friendsbook.entity;
 
-
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
@@ -15,22 +13,21 @@ import lombok.Data;
 @Data
 @Entity
 public class Notification {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String message;
-    private String status; // pending, accepted, declined
+	private String message;
+	private String status;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonBackReference
-    private Users user;
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	@JsonBackReference
+	private Users user;
 
-    @ManyToOne
-    @JoinColumn(name = "sender_id")
-    @JsonBackReference
-    private Users sender;
+	@ManyToOne
+	@JoinColumn(name = "sender_id")
+	@JsonBackReference
+	private Users sender;
 
-    
 }

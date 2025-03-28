@@ -1,6 +1,5 @@
 package com.friendsbook.repository;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -14,10 +13,13 @@ import com.friendsbook.entity.Users;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 	Notification findBySenderAndUserAndMessage(Users sender, Users recipient, String message);
-    List<Notification> findByUser(Users user);
-    Optional<Notification> findById(Long id);
-    boolean existsByUserAndSender(Users user, Users sender);
-    List<Notification> findByUserAndStatus(Users user, String status);
-    @Query("SELECT n.user, COUNT(n) FROM Notification n GROUP BY n.user")
-    List<Object[]> countNotificationsPerUser();
+
+	Optional<Notification> findById(Long id);
+
+	boolean existsByUserAndSender(Users user, Users sender);
+
+	List<Notification> findByUserAndStatus(Users user, String status);
+
+	@Query("SELECT n.user, COUNT(n) FROM Notification n GROUP BY n.user")
+	List<Object[]> countNotificationsPerUser();
 }

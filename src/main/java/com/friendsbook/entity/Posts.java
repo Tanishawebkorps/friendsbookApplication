@@ -30,31 +30,29 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 public class Posts {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long postId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long postId;
 
-    @Column(name = "caption", length = 200)
-    private String caption ;
+	@Column(name = "caption", length = 200)
+	private String caption;
 
- 
-    @Lob 
-    private byte[] image;
-    
-    @ManyToOne
-    @JoinColumn(name = "userId") 
-    @JsonBackReference
-    private Users user;
+	@Lob
+	private byte[] image;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private Set<Likes> likes = new HashSet<>();
+	@ManyToOne
+	@JoinColumn(name = "userId")
+	@JsonBackReference
+	private Users user;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<Comments> comments = new HashSet<>();
-    
-    @Column(name = "created_at")
-    private Timestamp createdAt;
+	@OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonManagedReference
+	private Set<Likes> likes = new HashSet<>();
+
+	@OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JsonIgnore
+	private Set<Comments> comments = new HashSet<>();
+
+	@Column(name = "created_at")
+	private Timestamp createdAt;
 }
-

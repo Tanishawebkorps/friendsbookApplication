@@ -33,7 +33,7 @@ public class ImageController {
 	@Autowired
 	private UserService userService;
 
-//     1... Upload Image
+	// Upload Image
 	@PostMapping("/upload")
 	public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file,
 			@RequestParam("userId") String userId) {
@@ -58,7 +58,7 @@ public class ImageController {
 		}
 	}
 
-//	display user profile 
+	// display user profile page
 	@GetMapping("/profile")
 	public String getUserProfile(@RequestParam String userId, Model model) {
 
@@ -71,6 +71,7 @@ public class ImageController {
 		return "profilee";
 	}
 
+	// dispaly user profile photo
 	@GetMapping("/profilephoto")
 	@ResponseBody
 	public String getUserProfilePhoto(@RequestParam String userId) {

@@ -23,7 +23,6 @@ public class FollowService {
 	private UserRepository usersRepository;
 
 	public void followUser(Users follower, Users followedUser) {
-
 		if (!followersRepository.existsByFollowerAndFollowedUser(follower, followedUser)) {
 			Followers followers = new Followers();
 			followers.setFollower(follower);

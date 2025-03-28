@@ -12,7 +12,6 @@ import com.friendsbook.entity.Users;
 import jakarta.transaction.Transactional;
 
 @Repository
-public interface UserRepository extends CrudRepository<Users,String> {
+public interface UserRepository extends CrudRepository<Users, String> {
 	Optional<Users> findByUserEmail(String userEmail);
-	Users findUserIdByUserEmail(String userEmail);
 }
